@@ -2,24 +2,15 @@ import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
-import {
-  LayoutPlugin,
-  FormPlugin,
-  FormGroupPlugin,
-  FormInputPlugin,
-  ButtonPlugin
-} from "bootstrap-vue";
+import UIKit from "./ui-kit/";
 
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
-
-Vue.use(LayoutPlugin);
-Vue.use(FormPlugin);
-Vue.use(FormGroupPlugin);
-Vue.use(FormInputPlugin);
-Vue.use(ButtonPlugin);
+import Api from "@/services/api";
 
 Vue.config.productionTip = false;
+Api.init();
+UIKit.init();
 
 new Vue({
   router,
