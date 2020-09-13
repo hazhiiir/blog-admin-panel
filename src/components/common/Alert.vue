@@ -3,7 +3,7 @@
     <b-row align-h="end">
       <b-col sm="12" md="6" lg="4" xl="4">
         <b-alert :variant="variant" dismissible v-model="show">
-          {{ message }}
+          <slot></slot>
         </b-alert>
       </b-col>
     </b-row>
@@ -26,7 +26,6 @@ export type AlertVariantProp =
 @Component
 export default class Alert extends Vue {
   private show = false;
-  @Prop() private message!: string;
   @Prop() private variant!: AlertVariantProp;
 
   showAlert() {
