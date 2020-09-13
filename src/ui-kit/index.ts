@@ -5,8 +5,12 @@ import {
   FormGroupPlugin,
   FormInputPlugin,
   ButtonPlugin,
-  AlertPlugin
+  AlertPlugin,
+  SpinnerPlugin
 } from "bootstrap-vue";
+
+import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap-vue/dist/bootstrap-vue.css";
 
 const UIKit = {
   init() {
@@ -16,6 +20,7 @@ const UIKit = {
     Vue.use(FormInputPlugin);
     Vue.use(ButtonPlugin);
     Vue.use(AlertPlugin);
+    Vue.use(SpinnerPlugin);
   }
 };
 
