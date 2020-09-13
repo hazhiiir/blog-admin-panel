@@ -2,16 +2,27 @@ export type ValidationError<FieldSet> = {
   [key in keyof FieldSet]: string;
 };
 
-export type RegisterFields = "email" | "password" | "username";
+export interface RegisterFields {
+  email: string;
+  password: string;
+  username: string;
+}
 
 export interface User {
   username: string;
-  password: string;
   email: string;
+  token?: string;
+  password?: string;
 }
 
-export interface RegisterState {
+export interface AuthState {
   waiting: boolean;
   error: ValidationError<RegisterFields> | null;
   success: boolean;
+  user: User | null;
+  isAuthenticated: boolean;
+}
+
+export interface RootState {
+  auth: AuthState;
 }
