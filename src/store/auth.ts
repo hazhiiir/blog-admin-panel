@@ -55,6 +55,11 @@ const mutations: MutationTree<AuthState> = {
     } else {
       state.error = null;
     }
+  },
+  purgeUser(state) {
+    JWT.deleteToken();
+    state.user = null;
+    state.isAuthenticated = false;
   }
 };
 
@@ -77,6 +82,36 @@ const actions: ActionTree<AuthState, RootState> = {
           }
         });
     });
+  },
+  login({ commit }, currentUser: Partial<User>) {
+    commit("startRequest");
+    return new Promise((resolve, reject) => {
+      api
+        .post("users/login", { user: currentUser })
+        .then(({ data }) => {
+          const { user } = data;
+          commit("endRequestSuccess");
+          commit("setUser", user);
+          resolve(data);
+        })
+        .catch(({ response }) => {
+          const { status, data } = response;
+          if (status === 422) {
+            let { errors } = data;
+            if (errors["email or password"]) {
+              delete errors["email or password"];
+              const message =
+                "<strong>Login Failed!</strong>  User name and/or Password is invalid";
+              errors = { ...errors, message };
+            }
+            commit("endRequestFail", errors);
+            reject(response);
+          }
+        });
+    });
+  },
+  logout({ commit }) {
+    commit("purgeUser");
   },
   fetchCurrentUser({ commit }) {
     return new Promise((resolve, reject) => {

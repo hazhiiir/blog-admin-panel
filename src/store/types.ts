@@ -1,5 +1,5 @@
 export type ValidationError<FieldSet> = {
-  [key in keyof FieldSet]: string;
+  [key in keyof FieldSet | "message"]: string;
 };
 
 export interface RegisterFields {
@@ -8,6 +8,10 @@ export interface RegisterFields {
   username: string;
 }
 
+export interface LoginField {
+  email: string;
+  password: string;
+}
 export interface User {
   username: string;
   email: string;

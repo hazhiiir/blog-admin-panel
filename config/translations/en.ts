@@ -26,6 +26,25 @@ export const en = {
         desctiption: "Already Registered?",
         href: "/"
       }
+    },
+    login: {
+      title: "Login",
+      button: "Login",
+      loadingButton: "Loading...",
+      fields: {
+        password: {
+          label: "Password"
+        },
+        email: {
+          label: "Email",
+          placeholder: "sara@catmail.com"
+        }
+      },
+      secondaryAction: {
+        title: "Register Now",
+        desctiption: "Don’t have account?",
+        href: "/register"
+      }
     }
   }
 };
