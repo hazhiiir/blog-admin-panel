@@ -1,16 +1,21 @@
 <template>
   <div id="app">
     <app-bar v-if="!isInAuthPage()" />
-    <router-view />
+    <b-row no-gutters>
+      <nav-bar v-if="!isInAuthPage()" />
+      <router-view :class="{ sapced: !isInAuthPage() }" />
+    </b-row>
   </div>
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import AppBar from "@/components/Layout/AppBar.vue";
+import AppBar from "@/components/layout/AppBar.vue";
+import NavBar from "@/components/layout/SideBar.vue";
 
 @Component({
   components: {
-    AppBar
+    AppBar,
+    NavBar
   }
 })
 export default class App extends Vue {
@@ -25,6 +30,9 @@ export default class App extends Vue {
 }
 </script>
 <style>
+.sapced {
+  margin-left: 30px;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

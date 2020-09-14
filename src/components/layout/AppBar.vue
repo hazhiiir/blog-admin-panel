@@ -5,7 +5,7 @@
         <b-navbar variant="dark" type="dark" class="app-bar">
           <div class="header-captions-container">
             <h1>{{ $t("layout.header.title") }}</h1>
-            <span v-if="currentUser" class="ml-2">
+            <span v-if="currentUser" class="ml-4">
               {{
                 $t("layout.header.greeting", { username: currentUser.username })
               }}
@@ -34,6 +34,8 @@ export default class AppBar extends Vue {
   padding-left: 0;
 }
 .app-bar {
+  height: 60px;
+  z-index: 9999;
   .header-captions-container {
     display: flex;
     align-items: baseline;

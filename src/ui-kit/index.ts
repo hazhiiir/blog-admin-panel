@@ -8,7 +8,9 @@ import {
   AlertPlugin,
   SpinnerPlugin,
   NavbarPlugin,
-  NavPlugin
+  NavPlugin,
+  SidebarPlugin,
+  ListGroupPlugin
 } from "bootstrap-vue";
 
 import "bootstrap/dist/css/bootstrap.css";
@@ -25,6 +27,8 @@ const UIKit = {
     Vue.use(SpinnerPlugin);
     Vue.use(NavbarPlugin);
     Vue.use(NavPlugin);
+    Vue.use(SidebarPlugin);
+    Vue.use(ListGroupPlugin);
   }
 };
 
