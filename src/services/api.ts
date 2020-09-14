@@ -8,6 +8,9 @@ const Api = {
   init() {
     Vue.use(VueAxios, axios);
     Vue.axios.defaults.baseURL = API_URL;
+    if (JWT.getToken()) {
+      this.addAuthorizationHeader();
+    }
   },
 
   addAuthorizationHeader() {
