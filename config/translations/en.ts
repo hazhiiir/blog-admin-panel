@@ -1,4 +1,10 @@
 export const en = {
+  layout: {
+    header: {
+      title: "Arvan Challenge",
+      greeting: "Welcome {username}"
+    }
+  },
   auth: {
     fieldValidation: {
       required: "Required Field",
