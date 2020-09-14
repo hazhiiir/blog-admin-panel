@@ -1,13 +1,29 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
+    <app-bar v-if="!isInAuthPage()" />
     <router-view />
   </div>
 </template>
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import AppBar from "@/components/Layout/AppBar.vue";
 
+@Component({
+  components: {
+    AppBar
+  }
+})
+export default class App extends Vue {
+  isInAuthPage(): boolean {
+    const currentRoute = this.$route.name;
+    if (typeof currentRoute === "string") {
+      return ["Login", "Register"].indexOf(currentRoute) !== -1;
+    } else {
+      return false;
+    }
+  }
+}
+</script>
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
