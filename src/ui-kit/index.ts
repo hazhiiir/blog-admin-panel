@@ -6,7 +6,9 @@ import {
   FormInputPlugin,
   ButtonPlugin,
   AlertPlugin,
-  SpinnerPlugin
+  SpinnerPlugin,
+  NavbarPlugin,
+  NavPlugin
 } from "bootstrap-vue";
 
 import "bootstrap/dist/css/bootstrap.css";
@@ -21,6 +23,8 @@ const UIKit = {
     Vue.use(ButtonPlugin);
     Vue.use(AlertPlugin);
     Vue.use(SpinnerPlugin);
+    Vue.use(NavbarPlugin);
+    Vue.use(NavPlugin);
   }
 };
 
