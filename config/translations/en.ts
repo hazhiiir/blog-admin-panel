@@ -52,6 +52,35 @@ export const en = {
         href: "/register"
       }
     }
+  },
+  articles: {
+    read: {
+      title: "All Posts",
+      emptyText: "Nothing found!",
+      actions: {
+        delete: "Delete",
+        update: "Edit"
+      },
+      deleteModal: {
+        title: "Delete Article",
+        caption: "Are you sure to delete Article?",
+        buttons: {
+          yes: "Yes",
+          no: "No"
+        }
+      },
+      heading: {
+        number: "#",
+        title: "Title",
+        author: "Author",
+        tags: "Tags",
+        excerpt: "Excerpt",
+        created: "Created"
+      }
+    },
+    delete: {
+      successMessage: "Article deleted successfuly!"
+    }
   }
 };
 
