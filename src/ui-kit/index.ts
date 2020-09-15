@@ -10,7 +10,11 @@ import {
   NavbarPlugin,
   NavPlugin,
   SidebarPlugin,
-  ListGroupPlugin
+  ListGroupPlugin,
+  TablePlugin,
+  PaginationPlugin,
+  DropdownPlugin,
+  ModalPlugin
 } from "bootstrap-vue";
 
 import "bootstrap/dist/css/bootstrap.css";
@@ -29,6 +33,10 @@ const UIKit = {
     Vue.use(NavPlugin);
     Vue.use(SidebarPlugin);
     Vue.use(ListGroupPlugin);
+    Vue.use(TablePlugin);
+    Vue.use(PaginationPlugin);
+    Vue.use(DropdownPlugin);
+    Vue.use(ModalPlugin);
   }
 };
 
