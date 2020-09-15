@@ -2,7 +2,13 @@ export const en = {
   layout: {
     header: {
       title: "Arvan Challenge",
-      greeting: "Welcome {username}"
+      greeting: "Welcome {username}",
+      action: "Logout"
+    },
+    sidebar: {
+      title: "Post",
+      main: "All Articles",
+      secondary: "New Article"
     }
   },
   auth: {
@@ -80,6 +86,57 @@ export const en = {
     },
     delete: {
       successMessage: "Article deleted successfuly!"
+    },
+    create: {
+      title: "New Article",
+      submitButton: "Submit",
+      loadingButton: "Loading...",
+      successMessage: "<strong>Well done!</strong> Article created successfuly",
+      fields: {
+        title: {
+          label: "Title",
+          placeholder: "Title"
+        },
+        description: {
+          label: "Description",
+          placeholder: "Description"
+        },
+        body: {
+          label: "Body",
+          placeholder: "Write something..."
+        },
+        tagList: {
+          label: "Tag",
+          placeholder: "New Tag"
+        }
+      }
+    },
+    update: {
+      title: "New Article",
+      submitButton: "Submit",
+      loadingButton: "Loading...",
+      successMessage: "<strong>Well done!</strong> Article updated successfuly",
+      fields: {
+        title: {
+          label: "Title",
+          placeholder: "Title"
+        },
+        description: {
+          label: "Description",
+          placeholder: "Description"
+        },
+        body: {
+          label: "Body",
+          placeholder: "Write something..."
+        },
+        tagList: {
+          label: "Tag",
+          placeholder: "New Tag"
+        }
+      }
+    },
+    fieldValidation: {
+      required: "Required Field"
     }
   }
 };
