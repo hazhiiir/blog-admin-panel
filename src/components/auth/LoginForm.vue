@@ -25,6 +25,7 @@
               type="email"
               :placeholder="$t('auth.login.fields.email.placeholder')"
               required
+              autofocus
               @keyup="flushRequestError('email')"
             ></b-form-input>
           </b-form-group>
@@ -52,7 +53,7 @@
             type="button"
             variant="primary"
             block
-            :disabled="$v.currentUser.$error"
+            :disabled="$v.$invalid"
             @click="onSubmit()"
             >{{ $t("auth.login.button") }}
           </b-button>
@@ -166,7 +167,7 @@ export default class LoginForm extends Vue {
         this.alertComponent.showAlert();
         setTimeout(() => {
           this.$router.push("/");
-        }, 4000);
+        }, 1000);
       },
       () => {
         this.alertComponent.showAlert();
