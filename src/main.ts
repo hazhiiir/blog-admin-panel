@@ -1,3 +1,4 @@
+import "vue-class-component/hooks";
 import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
@@ -6,6 +7,7 @@ import UIKit from "./ui-kit/";
 import VueI18n from "vue-i18n";
 import Api from "@/services/api";
 import translationsMessages from "../config/translations";
+import { Route, RawLocation } from "vue-router";
 
 Vue.config.productionTip = false;
 Vue.use(VueI18n);
