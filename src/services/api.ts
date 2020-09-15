@@ -12,7 +12,9 @@ const Api = {
       this.addAuthorizationHeader();
     }
   },
-
+  removeAuthorizationHeader() {
+    delete axios.defaults.headers.common["Authorization"];
+  },
   addAuthorizationHeader() {
     Vue.axios.defaults.headers.common[
       "Authorization"

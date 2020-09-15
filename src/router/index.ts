@@ -1,15 +1,27 @@
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
-import Home from "../views/Home.vue";
 import Register from "../views/Register.vue";
 import Login from "../views/Login.vue";
+import Articles from "@/views/Articles.vue";
+import CreateArticle from "@/views/CreateArticle.vue";
+import EditArticle from "@/views/EditArticle.vue";
+
 Vue.use(VueRouter);
+import { Component } from "vue-property-decorator";
+
+Component.registerHooks([
+  "beforeRouteEnter",
+  "beforeRouteUpdate",
+  "beforeRouteLeave"
+]);
 
 const routes: Array<RouteConfig> = [
   {
     path: "/",
-    name: "Home",
-    component: Home
+    name: "Dashboard",
+    redirect: {
+      name: "Articles"
+    }
   },
   {
     path: "/about",
@@ -29,6 +41,32 @@ const routes: Array<RouteConfig> = [
     path: "/login",
     name: "Login",
     component: Login
+  },
+  {
+    path: "/articles/page/1",
+    redirect: { name: "Articles" }
+  },
+  {
+    path: "/articles",
+    name: "Articles",
+    component: Articles,
+    children: [
+      {
+        path: "page/:page",
+        name: "ArticlesPage",
+        component: Articles
+      }
+    ]
+  },
+  {
+    path: "/articles/create",
+    name: "CreateArticle",
+    component: CreateArticle
+  },
+  {
+    path: "/articles/edit/:slug",
+    name: "EditArticle",
+    component: EditArticle
   }
 ];
 

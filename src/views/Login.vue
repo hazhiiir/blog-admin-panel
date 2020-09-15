@@ -1,5 +1,5 @@
 <template>
-  <div class="register">
+  <div class="login w-100 p-4">
     <login-form></login-form>
   </div>
 </template>

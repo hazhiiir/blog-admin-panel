@@ -2,7 +2,13 @@ export const en = {
   layout: {
     header: {
       title: "Arvan Challenge",
-      greeting: "Welcome {username}"
+      greeting: "Welcome {username}",
+      action: "Logout"
+    },
+    sidebar: {
+      title: "Post",
+      main: "All Articles",
+      secondary: "New Article"
     }
   },
   auth: {
@@ -51,6 +57,86 @@ export const en = {
         desctiption: "Don’t have account?",
         href: "/register"
       }
+    }
+  },
+  articles: {
+    read: {
+      title: "All Posts",
+      emptyText: "Nothing found!",
+      actions: {
+        delete: "Delete",
+        update: "Edit"
+      },
+      deleteModal: {
+        title: "Delete Article",
+        caption: "Are you sure to delete Article?",
+        buttons: {
+          yes: "Yes",
+          no: "No"
+        }
+      },
+      heading: {
+        number: "#",
+        title: "Title",
+        author: "Author",
+        tags: "Tags",
+        excerpt: "Excerpt",
+        created: "Created"
+      }
+    },
+    delete: {
+      successMessage: "Article deleted successfuly!"
+    },
+    create: {
+      title: "New Article",
+      submitButton: "Submit",
+      loadingButton: "Loading...",
+      successMessage: "<strong>Well done!</strong> Article created successfuly",
+      fields: {
+        title: {
+          label: "Title",
+          placeholder: "Title"
+        },
+        description: {
+          label: "Description",
+          placeholder: "Description"
+        },
+        body: {
+          label: "Body",
+          placeholder: "Write something..."
+        },
+        tagList: {
+          label: "Tag",
+          placeholder: "New Tag"
+        }
+      }
+    },
+    update: {
+      title: "New Article",
+      submitButton: "Submit",
+      loadingButton: "Loading...",
+      successMessage: "<strong>Well done!</strong> Article updated successfuly",
+      fields: {
+        title: {
+          label: "Title",
+          placeholder: "Title"
+        },
+        description: {
+          label: "Description",
+          placeholder: "Description"
+        },
+        body: {
+          label: "Body",
+          placeholder: "Write something..."
+        },
+        tagList: {
+          label: "Tag",
+          placeholder: "New Tag"
+        }
+      }
+    },
+    fieldValidation: {
+      required: "Required Field"
     }
   }
 };

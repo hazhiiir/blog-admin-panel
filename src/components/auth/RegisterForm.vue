@@ -25,6 +25,7 @@
               type="text"
               :placeholder="$t('auth.register.fields.username.placeholder')"
               required
+              autofocus
               @keyup="flushRequestError('username')"
             ></b-form-input>
           </b-form-group>
@@ -68,7 +69,7 @@
             type="button"
             variant="primary"
             block
-            :disabled="$v.newUser.$error"
+            :disabled="$v.$invalid"
             @click="onSubmit()"
             >{{ $t("auth.register.button") }}
           </b-button>
@@ -146,13 +147,6 @@ export default class RegisterForm extends Vue {
   @authAction registerUser: any;
   @authMutaion("flushError") flushRequestError: any;
 
-  get userNameHasError() {
-    return !(
-      (this.requestError && Boolean(this.requestError.username)) ||
-      this?.$v?.newUser?.username?.$error
-    );
-  }
-
   get alertVariant(): AlertVariantProp {
     if (this.requestError) {
       return "danger";
@@ -193,7 +187,7 @@ export default class RegisterForm extends Vue {
         this.alertComponent.showAlert();
         setTimeout(() => {
           this.$router.push("/");
-        }, 4000);
+        }, 1000);
       },
       () => {
         this.alertComponent.showAlert();

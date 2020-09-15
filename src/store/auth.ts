@@ -112,6 +112,7 @@ const actions: ActionTree<AuthState, RootState> = {
   },
   logout({ commit }) {
     commit("purgeUser");
+    api.removeAuthorizationHeader();
   },
   fetchCurrentUser({ commit }) {
     return new Promise((resolve, reject) => {
@@ -125,7 +126,7 @@ const actions: ActionTree<AuthState, RootState> = {
         })
         .catch(({ response }) => {
           const { data } = response;
-          commit("endRequestFail", data.errors);
+          commit("endRequestFail", data?.errors);
           reject(response);
         });
     });

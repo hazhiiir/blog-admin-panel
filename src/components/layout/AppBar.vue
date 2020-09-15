@@ -1,8 +1,12 @@
 <template>
   <b-container fluid>
     <b-row>
-      <b-col col="12" class="header-column-container">
-        <b-navbar variant="dark" type="dark" class="app-bar">
+      <b-col col class="header-column-container ">
+        <b-navbar
+          variant="dark"
+          type="dark"
+          class="app-bar justify-content-between"
+        >
           <div class="header-captions-container">
             <h1>{{ $t("layout.header.title") }}</h1>
             <span v-if="currentUser" class="ml-4">
@@ -11,6 +15,9 @@
               }}
             </span>
           </div>
+          <b-button variant="outline-primary" @click="hanldeLogout">{{
+            $t("layout.header.action")
+          }}</b-button>
         </b-navbar>
       </b-col>
     </b-row>
@@ -19,13 +26,21 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { State, namespace } from "vuex-class";
+import { State, Action, namespace } from "vuex-class";
 import { User } from "@/store/types";
+
 const authState = namespace("auth", State);
+const authAction = namespace("auth", Action);
 
 @Component
 export default class AppBar extends Vue {
   @authState("user") currentUser!: User;
+  @authAction("logout") logout!: any;
+
+  hanldeLogout() {
+    this.logout();
+    window.location.href = "/login";
+  }
 }
 </script>
 <style lang="scss" scoped>
