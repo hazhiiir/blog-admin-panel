@@ -1,9 +1,11 @@
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
-import Home from "../views/Home.vue";
 import Register from "../views/Register.vue";
 import Login from "../views/Login.vue";
 import Articles from "@/views/Articles.vue";
+import CreateArticle from "@/views/CreateArticle.vue";
+import EditArticle from "@/views/EditArticle.vue";
+
 Vue.use(VueRouter);
 import { Component } from "vue-property-decorator";
 
@@ -53,16 +55,18 @@ const routes: Array<RouteConfig> = [
         path: "page/:page",
         name: "ArticlesPage",
         component: Articles
-      },
-      {
-        path: "/create",
-        name: "CreateArticle"
-      },
-      {
-        path: "/edit/:slug",
-        name: "EditArticle"
       }
     ]
+  },
+  {
+    path: "/articles/create",
+    name: "CreateArticle",
+    component: CreateArticle
+  },
+  {
+    path: "/articles/edit/:slug",
+    name: "EditArticle",
+    component: EditArticle
   }
 ];
 

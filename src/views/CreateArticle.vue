@@ -1,17 +1,17 @@
 <template>
   <div class="articles">
-    <read-articles />
+    <create-article />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import ReadArticles from "@/components/articles/Articles.vue";
+import CreateArticle from "@/components/articles/ArticleForm.vue";
 
 @Component({
   components: {
-    ReadArticles
+    CreateArticle
   }
 })
-export default class Articles extends Vue {}
+export default class CreateArticleView extends Vue {}
 </script>

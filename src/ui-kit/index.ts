@@ -14,7 +14,9 @@ import {
   TablePlugin,
   PaginationPlugin,
   DropdownPlugin,
-  ModalPlugin
+  ModalPlugin,
+  FormTextareaPlugin,
+  FormCheckboxPlugin
 } from "bootstrap-vue";
 
 import "bootstrap/dist/css/bootstrap.css";
@@ -37,6 +39,8 @@ const UIKit = {
     Vue.use(PaginationPlugin);
     Vue.use(DropdownPlugin);
     Vue.use(ModalPlugin);
+    Vue.use(FormTextareaPlugin);
+    Vue.use(FormCheckboxPlugin);
   }
 };
 

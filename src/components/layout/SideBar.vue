@@ -2,13 +2,13 @@
   <div id="sidebar-container" class="sidebar-expanded">
     <b-list-group>
       <b-list-group-item>
-        <span class="title">Title</span>
+        <span class="title">{{ $t("layout.sidebar.title") }}</span>
         <b-list-group class="nested">
-          <b-list-group-item>
-            <span class="content">test2</span>
+          <b-list-group-item :to="dashboardRoute" exact>
+            <span class="content">{{ $t("layout.sidebar.main") }}</span>
           </b-list-group-item>
-          <b-list-group-item active>
-            <span class="content">test2</span>
+          <b-list-group-item exact to="/articles/create">
+            <span class="content">{{ $t("layout.sidebar.secondary") }}</span>
           </b-list-group-item>
         </b-list-group>
       </b-list-group-item>
@@ -25,6 +25,23 @@ const authState = namespace("auth", State);
 @Component
 export default class NavBar extends Vue {
   @authState("user") currentUser!: User;
+
+  get dashboardRoute() {
+    const { name } = this.$route;
+    if (name === "Articles") {
+      return {
+        name: "Articles"
+      };
+    } else if (name === "ArticlesPage") {
+      return {
+        name: "ArticlesPage"
+      };
+    } else {
+      return {
+        name: "Dashboard"
+      };
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -53,7 +70,6 @@ export default class NavBar extends Vue {
 .list-group {
   border-radius: 0;
   border: none;
-  background: inherit;
   text-align: left;
   position: relative;
   &.nested {
@@ -62,6 +78,25 @@ export default class NavBar extends Vue {
 }
 .list-group-item.active {
   background-color: rgba(255, 255, 255, 0.15);
+  margin: 0 -1.25rem;
+  & .content {
+    padding: 0 1.25rem;
+  }
+}
+.list-group-item-action:hover,
+.list-group-item-action:focus {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  color: white !important;
+  width: 250px;
+  margin: 0 -1.25rem;
+  & .content {
+    padding: 0 1.25rem;
+  }
+}
+.router-link-active,
+.router-link-exact-active {
+  background-color: rgba(255, 255, 255, 0.15);
+  width: 250px;
   margin: 0 -1.25rem;
   & .content {
     padding: 0 1.25rem;
