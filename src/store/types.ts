@@ -1,5 +1,5 @@
 export type ValidationError<FieldSet> = {
-  [key in keyof FieldSet | "message"]: string;
+  [key in keyof FieldSet | "message"]: string | boolean;
 };
 
 export interface PagingParameters {
@@ -57,18 +57,23 @@ export interface Article {
 }
 
 export type RequestStateFlagsObject = {
-  [key in keyof CRUDOperations]: boolean;
+  [key in keyof CRUDOperations]: boolean | ValidationError<Partial<Article>>;
 };
 
+export interface TagObject {
+  text: string;
+  value: string;
+}
 export interface ArticleState {
   waiting: Partial<RequestStateFlagsObject> | null;
   success: Partial<RequestStateFlagsObject> | null;
-  error: {} | null;
+  error: Partial<RequestStateFlagsObject> | null;
   entities: {
     [key: string]: Article;
   } | null;
   allIds: string[] | null;
   articlesCount: number;
+  tagList: string[];
 }
 
 export interface RootState {
