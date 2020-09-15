@@ -2,17 +2,15 @@ import { ActionTree, MutationTree, Module, GetterTree } from "vuex";
 import {
   ArticleState,
   Article,
-  Author,
   CRUDOperations,
   RootState,
-  RegisterFields,
   ValidationError,
+  TagObject,
   PagingParameters
 } from "./types";
 import { normalize, schema } from "normalizr";
 import ArticleDataProvider from "@/services/article";
-import api from "@/services/api";
-import auth from "./auth";
+import TagDataProvider from "@/services/tag";
 import moment from "moment";
 
 const normalizeArticles = (articles: Article[]) => {
@@ -29,7 +27,8 @@ const state: ArticleState = {
   success: null,
   entities: null,
   allIds: null,
-  articlesCount: 0
+  articlesCount: 0,
+  tagList: []
 };
 
 const mutations: MutationTree<ArticleState> = {
@@ -38,7 +37,6 @@ const mutations: MutationTree<ArticleState> = {
     state.waiting = { ...waiting, [operation]: true };
     state.success = { ...success, [operation]: false };
     state.error = null;
-    return;
   },
   endRequestSuccess(state, operation: keyof CRUDOperations) {
     const { waiting, success } = state;
@@ -49,11 +47,49 @@ const mutations: MutationTree<ArticleState> = {
     const { success } = state;
     state.success = { ...success, [operation]: false };
   },
-  endRequestFail(state, error: ValidationError<RegisterFields>) {
-    return;
+  endRequestFail(
+    state,
+    payload: {
+      error: ValidationError<Partial<Article>> | true;
+      operation: keyof CRUDOperations;
+    }
+  ) {
+    const { waiting, success } = state;
+    const { error, operation } = payload;
+    state.waiting = { ...waiting, [operation]: false };
+    state.error = { ...state.error, [operation]: error };
   },
-  flushError(state, field?: keyof RegisterFields) {
-    return;
+  flushError(
+    state,
+    payload: {
+      operation: keyof CRUDOperations;
+      field?: keyof Partial<Article>;
+    }
+  ) {
+    if (!state.error) return;
+
+    const { operation, field } = payload;
+    if (typeof operation !== "undefined") {
+      if (typeof field === "undefined") {
+        state.error = { ...state.error, [operation]: null };
+      } else {
+        const newErrorObject = { ...state.error };
+        const currentOperationErrorObject = newErrorObject[operation];
+        if (typeof currentOperationErrorObject !== "undefined") {
+          if (typeof currentOperationErrorObject !== "boolean") {
+            currentOperationErrorObject[field] = false;
+            state.error = {
+              ...newErrorObject,
+              [operation]: {
+                ...currentOperationErrorObject
+              }
+            };
+          }
+        }
+      }
+    } else {
+      state.error = null;
+    }
   },
   setarAticlesCount(state, articlesCount: number) {
     state.articlesCount = articlesCount;
@@ -63,6 +99,20 @@ const mutations: MutationTree<ArticleState> = {
     const { articles } = entities;
     state.entities = { ...articles };
     state.allIds = [...result];
+  },
+  addArticles(state, article: Article) {
+    const { entities, allIds } = state;
+    const { slug } = article;
+    state.entities = { ...entities, [slug]: article };
+    if (allIds?.indexOf(slug) === -1) {
+      state.allIds = [...allIds, slug];
+    }
+  },
+  setTags(state, tags) {
+    state.tagList = [...tags];
+  },
+  addTag(state, tag) {
+    state.tagList = [tag, ...state.tagList];
   },
   pushArticles(state, payload) {
     const { entities, result } = payload;
@@ -94,6 +144,31 @@ const mutations: MutationTree<ArticleState> = {
 };
 
 const actions: ActionTree<ArticleState, RootState> = {
+  fetchTags({ commit }) {
+    return new Promise((resolve, reject) => {
+      TagDataProvider.getList()
+        .then(({ data }) => {
+          commit("setTags", data?.tags);
+          resolve(data);
+        })
+        .catch(() => reject());
+    });
+  },
+  fetchArticle({ commit }, slug: string) {
+    commit("startRequest", "read");
+    return new Promise((resolve, reject) => {
+      ArticleDataProvider.getOne(slug)
+        .then(({ data }) => {
+          commit("endRequestSuccess", "read");
+          commit("addArticles", data?.article);
+          resolve(data);
+        })
+        .catch(() => {
+          commit("endRequestFail", { operation: "read", error: true });
+          reject();
+        });
+    });
+  },
   fetchArticles(
     { commit },
     payload: { paging: PagingParameters; push: boolean }
@@ -109,7 +184,68 @@ const actions: ActionTree<ArticleState, RootState> = {
           commit("endRequestSuccess", "read");
           resolve(data);
         })
-        .catch();
+        .catch(() => {
+          commit("endRequestFail", { operation: "read", error: true });
+          reject();
+        });
+    });
+  },
+  createArticle({ commit, getters }, newArticle: Partial<Article>) {
+    commit("startRequest", "create");
+    const { tagList } = newArticle;
+    const tags = getters["tags"]
+      .filter(
+        (tagObject: TagObject) => tagList?.indexOf(tagObject.value) !== -1
+      )
+      .map((tag: TagObject) => tag.text);
+    return new Promise((resolve, reject) => {
+      ArticleDataProvider.create({ ...newArticle, tagList: tags })
+        .then(({ data }) => {
+          commit("endRequestSuccess", "create");
+          resolve(data);
+        })
+        .catch(({ response }) => {
+          let error: boolean | string = true;
+          const { status } = response;
+          if (status === 404) {
+            error = "Nothing Found!";
+          }
+          commit("endRequestFail", { operation: "create", error });
+          reject();
+        });
+    });
+  },
+  updateArticle({ commit, getters }, newArticle: Partial<Article>) {
+    commit("startRequest", "update");
+    const { tagList, slug, ...otherProperties } = newArticle;
+    const tags = getters["tags"]
+      .filter(
+        (tagObject: TagObject) => tagList?.indexOf(tagObject.value) !== -1
+      )
+      .map((tag: TagObject) => tag.text);
+    return new Promise((resolve, reject) => {
+      if (typeof slug === "undefined") {
+        commit("endRequestFail", {
+          operation: "update",
+          error: "Could not edit article! Nothing Found."
+        });
+        reject();
+      } else {
+        ArticleDataProvider.update(slug, { ...otherProperties, tagList: tags })
+          .then(({ data }) => {
+            commit("endRequestSuccess", "update");
+            resolve(data);
+          })
+          .catch(({ response }) => {
+            let error: boolean | string = true;
+            const { status } = response;
+            if (status === 404) {
+              error = "Could not edit article! Nothing Found.";
+            }
+            commit("endRequestFail", { operation: "update", error });
+            reject(response);
+          });
+      }
     });
   },
   deleteArticle({ commit }, slug: string) {
@@ -121,11 +257,32 @@ const actions: ActionTree<ArticleState, RootState> = {
           commit("removeArticle", slug);
           resolve();
         })
-        .catch(() => reject());
+        .catch(() => {
+          commit("endRequestFail", { operation: "delete", error: true });
+          reject();
+        });
     });
   }
 };
 export const getters: GetterTree<ArticleState, RootState> = {
+  formattedArticle: state => (slug: string) => {
+    const { entities } = state;
+    if (!entities) return null;
+
+    const currentArticle = entities[slug];
+
+    if (!currentArticle) return null;
+
+    const { title, description, body, tagList } = currentArticle;
+    const tags = tagList.map(tag => tag.split(" ").join("-"));
+    return {
+      title,
+      description,
+      body,
+      tagList: tags,
+      slug
+    };
+  },
   articles: state => {
     const { allIds, entities } = state;
     if (!entities) return null;
@@ -146,6 +303,14 @@ export const getters: GetterTree<ArticleState, RootState> = {
         author: `@${author.username}`,
         created: moment(createdAt).format("MMMM DD, YYYY"),
         excerpt
+      };
+    });
+  },
+  tags: state => {
+    return state.tagList.map(tag => {
+      return {
+        text: tag,
+        value: tag.split(" ").join("-")
       };
     });
   }

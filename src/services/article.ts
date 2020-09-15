@@ -1,10 +1,11 @@
-import { User } from "../store/types";
 import api from "./api";
-import API_URL from "config/HTTP";
+import { Article } from "@/store/types";
 
 const ArticleDataProvider = {
-  create() {
-    return api.post("articles", {});
+  create(newArticle: Partial<Article>) {
+    return api.post("articles", {
+      article: newArticle
+    });
   },
   getOne(slug: string) {
     return api.get("articles", slug);
@@ -14,6 +15,9 @@ const ArticleDataProvider = {
   },
   delete(slug: string) {
     return api.delete(`articles/${slug}`);
+  },
+  update(slug: string, params: Partial<Article>) {
+    return api.update("articles", slug, { article: params });
   }
 };
 
