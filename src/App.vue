@@ -1,7 +1,11 @@
 <template>
   <div id="app">
     <app-bar v-if="!isInAuthPage()" />
-    <b-row no-gutters>
+    <b-row
+      no-gutters
+      class="flex-nowrap"
+      :class="{ 'auth-view': isInAuthPage(), 'w-100': isInAuthPage() }"
+    >
       <nav-bar v-if="!isInAuthPage()" />
       <router-view :class="{ sapced: !isInAuthPage() }" />
     </b-row>
@@ -34,12 +38,16 @@ export default class App extends Vue {
   margin-left: 30px;
   margin-right: 30px;
   flex-grow: 1;
+  flex-wrap: nowrap;
 }
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+.auth-view {
+  justify-content: center;
 }
 </style>
