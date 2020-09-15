@@ -1,13 +1,18 @@
 <template>
-  <b-container class="alert" fluid>
-    <b-row align-h="end">
+  <div class="alert-component w-100">
+    <b-row align-h="end" no-gutters>
       <b-col sm="12" md="6" lg="4" xl="4">
-        <b-alert :variant="variant" dismissible v-model="show">
+        <b-alert
+          :variant="variant"
+          dismissible
+          v-model="show"
+          @dismissed="handleDissmissed"
+        >
           <slot></slot>
         </b-alert>
       </b-col>
     </b-row>
-  </b-container>
+  </div>
 </template>
 
 <script lang="ts">
@@ -33,6 +38,9 @@ export default class Alert extends Vue {
   }
   dissmissAlert() {
     this.show = false;
+  }
+  handleDissmissed() {
+    this.$emit("dismissed");
   }
 }
 </script>
