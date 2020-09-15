@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-4 w-100">
+  <div class="mt-4 flex-nowrap">
     <b-row no-gutters class="title-container">
       <b-col sm="12" md="12" lg="12" xl="12">
         <h2>{{ $t("articles.read.title") }}</h2>
@@ -7,12 +7,36 @@
     </b-row>
     <alert
       ref="deleteSuccessAlert"
-      :variant="deleteAlertVariant"
-      @dismissed="deleteSuccessAlertDissmissed"
+      :variant="getAlertVariant('delete')"
+      @dismissed="successAlertDissmissed('delete')"
     >
       <span v-if="this.success && this.success.delete">{{
         $t("articles.delete.successMessage")
       }}</span>
+      <span v-if="false">Somthing wrong!</span>
+    </alert>
+    <alert
+      ref="createSuccessAlert"
+      :variant="getAlertVariant('create')"
+      @dismissed="successAlertDissmissed('create')"
+    >
+      <span
+        v-if="this.success && this.success.create"
+        v-html="$t('articles.create.successMessage')"
+      >
+      </span>
+      <span v-if="false">Somthing wrong!</span>
+    </alert>
+    <alert
+      ref="editSuccessAlert"
+      :variant="getAlertVariant('update')"
+      @dismissed="successAlertDissmissed('update')"
+    >
+      <span
+        v-if="this.success && this.success.update"
+        v-html="$t('articles.update.successMessage')"
+      >
+      </span>
       <span v-if="false">Somthing wrong!</span>
     </alert>
     <b-row no-gutters align-h="start">
@@ -26,13 +50,14 @@
           head-variant="light"
           :empty-text="$t('articles.read.emptyText')"
           :busy.sync="busyState"
+          stacked="lg"
         >
           <template v-slot:cell(actions)="row">
             <b-dropdown :id="`dropdown-${row.index}`" right variant="primary">
               <template v-slot:button-content>
                 <span class="mr-2">...</span>
               </template>
-              <b-dropdown-item>{{
+              <b-dropdown-item @click="requestEditArticle(row.item.slug)">{{
                 $t("articles.read.actions.update")
               }}</b-dropdown-item>
               <b-dropdown-item @click="requestDeleteArticle(row.item.slug)">{{
@@ -80,10 +105,14 @@
 <script lang="ts">
 import { Component, Watch, Vue, Ref } from "vue-property-decorator";
 import { Action, State, namespace, Getter, Mutation } from "vuex-class";
-import { RequestStateFlagsObject, PagingParameters } from "@/store/types";
+import {
+  RequestStateFlagsObject,
+  PagingParameters,
+  CRUDOperations
+} from "@/store/types";
 import { BvModal } from "bootstrap-vue";
 import Alert from "../common/Alert.vue";
-//flushRequestSuccess
+
 const articleState = namespace("article", State);
 const articleActions = namespace("article", Action);
 const articleGetters = namespace("article", Getter);
@@ -131,9 +160,12 @@ export default class Articles extends Vue {
 
   @Ref("deleteModal") deleteModal!: BvModal;
   @Ref("deleteSuccessAlert") deleteSuccessAlert!: Alert;
+  @Ref("createSuccessAlert") createSuccessAlert!: Alert;
+  @Ref("editSuccessAlert") editSuccessAlert!: Alert;
   @articleState("articlesCount") articlesCount!: number;
   @articleState("waiting") waiting!: Partial<RequestStateFlagsObject>;
   @articleState("success") success!: Partial<RequestStateFlagsObject>;
+  @articleState("error") requestError!: Partial<RequestStateFlagsObject>;
   @articelMutations("flushRequestSuccess") flushRequestSuccess: any;
   @articleActions("fetchArticles") fetchArticles: any;
   @articleActions("deleteArticle") deleteArticle: any;
@@ -152,9 +184,11 @@ export default class Articles extends Vue {
     }
   }
 
-  get deleteAlertVariant() {
-    if (this.success && this.success.delete) {
+  getAlertVariant(operation: keyof CRUDOperations) {
+    if (this.success && this.success[operation]) {
       return "success";
+    } else if (this.requestError && this.requestError[operation]) {
+      return "danger";
     } else {
       return "info";
     }
@@ -226,11 +260,41 @@ export default class Articles extends Vue {
     this.deleteModal.show("articles-delete-modal-1");
   }
 
-  deleteSuccessAlertDissmissed() {
-    this.flushRequestSuccess("delete");
+  requestEditArticle(slug: string) {
+    this.$router.push({
+      name: "EditArticle",
+      params: {
+        slug
+      }
+    });
+  }
+  successAlertDissmissed(operation: keyof CRUDOperations) {
+    this.flushRequestSuccess(operation);
+  }
+
+  handleAlerts() {
+    if (this.success) {
+      if (this.success.create) {
+        this.createSuccessAlert.showAlert();
+      }
+      if (this.success.delete) {
+        this.deleteSuccessAlert.showAlert();
+      }
+      if (this.success.update) {
+        this.editSuccessAlert.showAlert();
+      }
+    }
+  }
+
+  destroyed() {
+    this.successAlertDissmissed("read");
+    this.successAlertDissmissed("delete");
+    this.successAlertDissmissed("update");
+    this.successAlertDissmissed("create");
   }
 
   mounted() {
+    this.handleAlerts();
     this.loadPageData();
   }
 }
