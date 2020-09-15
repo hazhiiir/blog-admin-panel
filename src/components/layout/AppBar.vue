@@ -1,7 +1,7 @@
 <template>
   <b-container fluid>
     <b-row>
-      <b-col col="12" class="header-column-container">
+      <b-col col class="header-column-container">
         <b-navbar variant="dark" type="dark" class="app-bar">
           <div class="header-captions-container">
             <h1>{{ $t("layout.header.title") }}</h1>
